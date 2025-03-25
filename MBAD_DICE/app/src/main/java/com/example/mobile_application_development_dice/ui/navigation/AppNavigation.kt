@@ -1,3 +1,10 @@
+/**
+ * CourseWork : Mobile Application Development - CW 1
+ * Student name : Himath De Silva
+ * IIT ID : 20231127
+ * UOW ID : W2051895
+ */
+
 package com.example.mobile_application_development_dice.ui.navigation
 
 import androidx.compose.runtime.Composable

@@ -1,3 +1,10 @@
+/**
+ * CourseWork : Mobile Application Development - CW 1
+ * Student name : Himath De Silva
+ * IIT ID : 20231127
+ * UOW ID : W2051895
+ */
+
 package com.example.mobile_application_development_dice.ui.screens
 
 import androidx.compose.foundation.Image
@@ -14,14 +21,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,9 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,9 +53,6 @@ import com.example.mobile_application_development_dice.ui.theme.DiceSelected
 import androidx.compose.foundation.shape.CircleShape
 import com.example.mobile_application_development_dice.ui.theme.DiceYellow
 import com.example.mobile_application_development_dice.ui.theme.DiceGreen
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 
 /**
  * Game screen showing the dice game interface
@@ -98,13 +95,12 @@ fun GameScreen(
             )
         }
     ) { paddingValues ->
-        // Wrap content in a Box with background image
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Background image
+
             Image(
                 painter = painterResource(id = R.drawable.bg2),
                 contentDescription = null,
@@ -112,29 +108,29 @@ fun GameScreen(
                 contentScale = ContentScale.Crop
             )
             
-            // Game content
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Space at the top for scores
+
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Game scores in bubbles
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    // Win counter bubble
+
                     ScoreBubble(
                         title = "WINS",
                         value = "H: ${gameState.playerWins} | C: ${gameState.computerWins}",
                         color = DiceBlue
                     )
                     
-                    // Target score bubble
+
                     ScoreBubble(
                         title = "TARGET",
                         value = "${gameState.targetScore}",
@@ -142,20 +138,20 @@ fun GameScreen(
                     )
                 }
 
-                // Player scores in bubbles
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Human score
+
                     ScoreBubble(
                         title = "HUMAN",
                         value = "${gameState.playerScore}",
                         color = DiceRed
                     )
                     
-                    // Roll counter in the middle
+
                     Card(
                         modifier = Modifier
                             .padding(vertical = 8.dp)
@@ -176,7 +172,7 @@ fun GameScreen(
                         }
                     }
                     
-                    // Computer score
+
                     ScoreBubble(
                         title = "COMPUTER",
                         value = "${gameState.computerScore}",
@@ -184,13 +180,13 @@ fun GameScreen(
                     )
                 }
 
-                // More space before dice sections
+
                 Spacer(modifier = Modifier.height(32.dp))
                 
-                // Create a Box that pushes content down and takes up space
+
                 Box(modifier = Modifier.weight(0.1f))
                 
-                // Player section with a card background
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -231,7 +227,7 @@ fun GameScreen(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    // Throw button
+
                     Button(
                         onClick = { gameViewModel.rollPlayerDice() },
                         enabled = !gameState.isGameOver && gameState.currentRollCount < 3 && !gameState.isTieBreaker,
@@ -250,7 +246,7 @@ fun GameScreen(
                         )
                     }
                     
-                    // Score button
+
                     Button(
                         onClick = { gameViewModel.scorePlayerDice() },
                         enabled = !gameState.isGameOver && gameState.currentRollCount > 0 && !gameState.isTieBreaker,
@@ -271,7 +267,7 @@ fun GameScreen(
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
-                // Computer dice section with card background
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -293,22 +289,22 @@ fun GameScreen(
                         
                         Spacer(modifier = Modifier.height(8.dp))
                         
-                        // Computer dice row
+
                         DiceRow(
                             dice = gameState.computerDice,
-                            onDiceClick = { /* No action for computer dice */ }
+                            onDiceClick = {  }
                         )
                     }
                 }
                 
                 Spacer(modifier = Modifier.weight(1f))
                 
-                // Game over message
+
                 if (gameState.isGameOver) {
                     GameOverMessage(isPlayerWinner = gameState.isPlayerWinner)
                 }
                 
-                // Tie breaker message
+
                 if (gameState.isTieBreaker) {
                     Text(
                         text = "Tie Breaker! Rolling again...",
@@ -355,7 +351,7 @@ fun DiceItem(
     onClick: () -> Unit
 ) {
     val borderColor = if (isSelected) {
-        DiceSelected // Using our custom green selection color
+        DiceSelected
     } else {
         Color.Transparent
     }

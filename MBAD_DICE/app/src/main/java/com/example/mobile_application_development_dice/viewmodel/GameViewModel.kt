@@ -1,3 +1,10 @@
+/**
+ * CourseWork : Mobile Application Development - CW 1
+ * Student name : Himath De Silva
+ * IIT ID : 20231127
+ * UOW ID : W2051895
+ */
+
 package com.example.mobile_application_development_dice.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -21,7 +28,6 @@ class GameViewModel : ViewModel() {
     private val gameLogic = GameLogic()
     private val computerAI = ComputerAI()
     
-    // Game state as a StateFlow for reactive UI updates
     private val _gameState = MutableStateFlow(GameState())
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
     
@@ -40,16 +46,13 @@ class GameViewModel : ViewModel() {
     fun rollPlayerDice() {
         val currentState = _gameState.value
         
-        // Don't allow rolling if game is over or at max rolls
         if (currentState.isGameOver || currentState.currentRollCount >= 3) {
             return
         }
         
-        // Roll the dice
         val newDice = gameLogic.rollDice(currentState.playerDice)
         val newRollCount = currentState.currentRollCount + 1
         
-        // Update state
         _gameState.update { state ->
             state.copy(
                 playerDice = newDice,
@@ -57,7 +60,6 @@ class GameViewModel : ViewModel() {
             )
         }
         
-        // Auto-score if this was the third roll
         if (newRollCount >= 3) {
             scorePlayerDice()
         }
@@ -69,15 +71,12 @@ class GameViewModel : ViewModel() {
     fun togglePlayerDiceSelection(index: Int) {
         val currentState = _gameState.value
         
-        // Don't allow selection if game is over or no rolls yet
         if (currentState.isGameOver || currentState.currentRollCount == 0) {
             return
         }
         
-        // Toggle selection
         val newDice = gameLogic.toggleDiceSelection(currentState.playerDice, index)
         
-        // Update state
         _gameState.update { state ->
             state.copy(playerDice = newDice)
         }
@@ -89,16 +88,13 @@ class GameViewModel : ViewModel() {
     fun scorePlayerDice() {
         val currentState = _gameState.value
         
-        // Don't allow scoring if game is over or no rolls yet
         if (currentState.isGameOver || currentState.currentRollCount == 0) {
             return
         }
         
-        // Calculate score
         val diceScore = gameLogic.calculateScore(currentState.playerDice)
         val newPlayerScore = currentState.playerScore + diceScore
         
-        // Update state with new score
         _gameState.update { state ->
             state.copy(
                 playerScore = newPlayerScore,
@@ -106,10 +102,8 @@ class GameViewModel : ViewModel() {
             )
         }
         
-        // Check if game is over or tie breaker needed
         checkGameStatus()
         
-        // If game continues, start computer's turn
         if (!_gameState.value.isGameOver && !_gameState.value.isTieBreaker) {
             playComputerTurn()
         }
@@ -120,20 +114,15 @@ class GameViewModel : ViewModel() {
      */
     private fun playComputerTurn() {
         viewModelScope.launch {
-            // Set computer turn flag
             _gameState.update { it.copy(isComputerTurn = true) }
             
-            // Initial roll
             rollComputerDice()
-            delay(1000) // Delay for animation
+            delay(1000)
             
-            // Get current state after roll
             var currentState = _gameState.value
             
-            // Decide whether to reroll (up to 2 more times)
             var currentRoll = 1
             while (currentRoll < 3) {
-                // Check if computer wants to reroll
                 val shouldReroll = computerAI.shouldReroll(
                     currentRoll,
                     currentState.computerScore,
@@ -143,7 +132,6 @@ class GameViewModel : ViewModel() {
                 )
                 
                 if (shouldReroll) {
-                    // Select dice to keep
                     val diceWithSelection = computerAI.selectDiceToKeep(
                         currentState.computerDice,
                         currentRoll,
@@ -151,30 +139,23 @@ class GameViewModel : ViewModel() {
                         currentState.targetScore
                     )
                     
-                    // Update selections
                     _gameState.update { it.copy(computerDice = diceWithSelection) }
-                    delay(500) // Delay to show selections
+                    delay(500)
                     
-                    // Roll again
                     rollComputerDice()
-                    delay(1000) // Delay for animation
+                    delay(1000)
                     
-                    // Update current state
                     currentState = _gameState.value
                     currentRoll++
                 } else {
-                    // Computer decides not to reroll
                     break
                 }
             }
             
-            // Score computer's dice
             scoreComputerDice()
             
-            // End computer's turn
             _gameState.update { it.copy(isComputerTurn = false) }
             
-            // Reset for next player turn if game continues
             if (!_gameState.value.isGameOver && !_gameState.value.isTieBreaker) {
                 _gameState.update { it.copy(currentRollCount = 0) }
             }
@@ -187,10 +168,8 @@ class GameViewModel : ViewModel() {
     private fun rollComputerDice() {
         val currentState = _gameState.value
         
-        // Roll the dice (only unselected ones)
         val newDice = gameLogic.rollDice(currentState.computerDice)
         
-        // Update state
         _gameState.update { state ->
             state.copy(computerDice = newDice)
         }
@@ -202,11 +181,9 @@ class GameViewModel : ViewModel() {
     private fun scoreComputerDice() {
         val currentState = _gameState.value
         
-        // Calculate score
         val diceScore = gameLogic.calculateScore(currentState.computerDice)
         val newComputerScore = currentState.computerScore + diceScore
         
-        // Update state with new score
         _gameState.update { state ->
             state.copy(
                 computerScore = newComputerScore,
@@ -214,7 +191,6 @@ class GameViewModel : ViewModel() {
             )
         }
         
-        // Check if game is over or tie breaker needed
         checkGameStatus()
     }
     
@@ -224,19 +200,16 @@ class GameViewModel : ViewModel() {
     private fun checkGameStatus() {
         val currentState = _gameState.value
         
-        // Check if tie breaker is needed
         if (gameLogic.isTieBreakerNeeded(
                 currentState.playerScore,
                 currentState.computerScore,
                 currentState.targetScore
             )) {
-            // Start tie breaker
             _gameState.update { it.copy(isTieBreaker = true) }
             startTieBreaker()
             return
         }
         
-        // Check if game is over
         val (isGameOver, isPlayerWinner) = gameLogic.checkGameOver(
             currentState.playerScore,
             currentState.computerScore,
@@ -244,11 +217,9 @@ class GameViewModel : ViewModel() {
         )
         
         if (isGameOver) {
-            // Update win statistics
             val playerWins = if (isPlayerWinner == true) currentState.playerWins + 1 else currentState.playerWins
             val computerWins = if (isPlayerWinner == false) currentState.computerWins + 1 else currentState.computerWins
             
-            // Update game state
             _gameState.update { state ->
                 state.copy(
                     isGameOver = true,
@@ -265,7 +236,6 @@ class GameViewModel : ViewModel() {
      */
     private fun startTieBreaker() {
         viewModelScope.launch {
-            // Reset dice for tie breaker
             _gameState.update { state ->
                 state.copy(
                     playerDice = List(5) { Dice() },
@@ -274,13 +244,11 @@ class GameViewModel : ViewModel() {
                 )
             }
             
-            delay(1000) // Delay for UI update
+            delay(1000)
             
-            // Roll dice for both players
             val playerDice = gameLogic.rollDice(_gameState.value.playerDice)
             val computerDice = gameLogic.rollDice(_gameState.value.computerDice)
             
-            // Update state with new dice
             _gameState.update { state ->
                 state.copy(
                     playerDice = playerDice,
@@ -288,17 +256,14 @@ class GameViewModel : ViewModel() {
                 )
             }
             
-            delay(1000) // Delay for animation
+            delay(1000)
             
-            // Resolve tie breaker
             val winner = gameLogic.resolveTieBreaker(playerDice, computerDice)
             
             if (winner != null) {
-                // We have a winner
                 val playerWins = if (winner) _gameState.value.playerWins + 1 else _gameState.value.playerWins
                 val computerWins = if (!winner) _gameState.value.computerWins + 1 else _gameState.value.computerWins
                 
-                // Update game state
                 _gameState.update { state ->
                     state.copy(
                         isGameOver = true,
@@ -309,7 +274,6 @@ class GameViewModel : ViewModel() {
                     )
                 }
             } else {
-                // Still tied, repeat tie breaker
                 delay(1000)
                 startTieBreaker()
             }

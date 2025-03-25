@@ -1,3 +1,10 @@
+/**
+ * CourseWork : Mobile Application Development - CW 1
+ * Student name : Himath De Silva
+ * IIT ID : 20231127
+ * UOW ID : W2051895
+ */
+
 package com.example.mobile_application_development_dice.ui.screens
 
 import androidx.compose.foundation.Image
@@ -8,10 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -43,7 +47,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalContext
 
 /**
  * Home screen with options to start a new game or view about information
@@ -62,7 +65,6 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Background
             Image(
                 painter = painterResource(id = R.drawable.bg1),
                 contentDescription = null,
@@ -70,7 +72,6 @@ fun HomeScreen(
                 contentScale = ContentScale.Crop
             )
             
-            // Content
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -78,7 +79,6 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Game Title
                 Text(
                     text = "Dice Game",
                     style = MaterialTheme.typography.headlineLarge,
@@ -87,7 +87,7 @@ fun HomeScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .background(
-                            color = Color(0x80000000), // Semi-transparent black
+                            color = Color(0x80000000),
                             shape = RoundedCornerShape(16.dp)
                         )
                         .padding(16.dp)
