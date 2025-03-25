@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Dice Game</string>
+    <string name="new_game">New Game</string>
+    <string name="about">About</string>
+    <string name="throw_dice">Throw</string>
+    <string name="score">Score</string>
+    <string name="game_status">Human: %1$d | Computer: %2$d</string>
+    <string name="win_counter">H: %1$d / C: %2$d</string>
+    <string name="you_win">You Win!</string>
+    <string name="you_lose">You Lose!</string>
+    <string name="student_name">Your Name</string>
+    <string name="student_id">Your ID</string>
+    <string name="plagiarism_statement">I confirm that I understand what plagiarism is and have read and understood the section on Assessment Offences in the Essential Information for Students. The work that I have submitted is entirely my own. Any work from other authors is duly referenced and acknowledged.</string>
+    <string name="back">Back</string>
+    <string name="target_score">Target Score: %1$d</string>
+    <string name="set_target_score">Set Target Score</string>
+    <string name="roll_count">Roll: %1$d/3</string>
+    <string name="about_title">About</string>
+</resources>
